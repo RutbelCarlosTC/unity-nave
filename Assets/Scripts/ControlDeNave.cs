@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
@@ -19,12 +20,13 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Time.deltaTime + " seg. "+(1.0f/Time.deltaTime)+" FPS");
+        //Debug.Log(Time.deltaTime + " seg. "+(1.0f/Time.deltaTime)+" FPS");
         ProcesarInput();
     }
 
     private void ProcesarInput(){
         if (Input.GetKey(KeyCode.Space)){
+            rigidbody.freezeRotation = true;
             rigidbody.AddRelativeForce(Vector3.up);
             if(!audioSource.isPlaying){
                 audioSource.Play();
@@ -32,6 +34,7 @@ public class NewBehaviourScript : MonoBehaviour
         }
         else{
             audioSource.Stop();
+            rigidbody.freezeRotation = false;
         }
 
         if (Input.GetKey(KeyCode.D)){
@@ -47,6 +50,20 @@ public class NewBehaviourScript : MonoBehaviour
             rotarIzquierda.z += Time.deltaTime * 0.5f;
             transform.rotation = rotarIzquierda;
 
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision){
+        switch (collision.gameObject.tag){
+            case "ColisionSegura":
+                print("Colisión Segura-Ganaste");
+                break;
+            case "ColisiónPeligrosa":
+                print("Colision Peligrosa");
+                break;
+            default:
+                print("CHOQUE...");
+                break;
         }
     }
 }
